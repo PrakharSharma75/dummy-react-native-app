@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme": "REACT_NATIVE",
     "name": "REACT-NATIVE",
     "slug": "REACT-NATIVE",
     "version": "1.0.0",
@@ -20,10 +21,20 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.prakharsharma.reactnativeapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "d6854c59-d933-46e7-a263-cb2a5629d8f6"
+      }
     }
   }
 }
