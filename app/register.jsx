@@ -1,56 +1,47 @@
-import { 
-  View, 
-  Text, 
-  TextInput, 
-  TouchableOpacity, 
-  StyleSheet, 
-  ImageBackground 
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ImageBackground,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Register() {
   const router = useRouter();
 
+  const [name, setName] = useState(""); 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleRegister = async () => {
-    if (!email || !password || !confirmPassword) {
-      alert("All fields are required");
+    if (!name || !email || !password || !confirmPassword) {
+      setMessage("All fields are required");
       return;
     }
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match");
+      setMessage("Passwords do not match");
       return;
     }
+    
+    await AsyncStorage.setItem(
+      "user",
+      JSON.stringify({ name, email, password })
+    );
 
-    try {
-      const response = await fetch("https://your-api.com/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
-      });
+    setMessage("Registration successful!");
 
-      const data = await response.json();
-
-      if (response.ok) {
-        alert("Registration successful!");
-        router.push("/login");
-      } else {
-        alert(data.message || "Registration failed");
-      }
-    } catch (error) {
-      console.error("Register error:", error);
-      alert("Could not connect to server");
-    }
+    setTimeout(() => {
+      router.push("/");
+    }, 800);
   };
 
   return (
@@ -70,6 +61,17 @@ export default function Register() {
 
       <View style={styles.card}>
         <Text style={styles.title}>Create Account</Text>
+
+        {message ? <Text style={styles.message}>{message}</Text> : null}
+
+        {/* 🔹 NEW NAME INPUT */}
+        <TextInput
+          placeholder="Full Name"
+          placeholderTextColor="#999"
+          style={styles.input}
+          value={name}
+          onChangeText={setName}
+        />
 
         <TextInput
           placeholder="Email"
@@ -101,22 +103,13 @@ export default function Register() {
           <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
       </View>
-
     </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 20,
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-  },
-
+  container: { flex: 1, justifyContent: "center", alignItems: "center" },
+  overlay: { ...StyleSheet.absoluteFillObject },
   backBtn: {
     position: "absolute",
     top: 45,
@@ -124,59 +117,28 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 10,
     borderRadius: 50,
-    elevation: 5,
-    shadowColor: "#000",
-    shadowOpacity: 0.15,
-    shadowOffset: { width: 0, height: 3 },
-    shadowRadius: 6,
-    zIndex: 10,
   },
-
   card: {
     width: "88%",
     backgroundColor: "#fff",
-    paddingVertical: 35,
-    paddingHorizontal: 25,
+    padding: 30,
     borderRadius: 20,
-    elevation: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 0, height: 6 },
-    shadowRadius: 12,
   },
-
-  title: {
-    fontSize: 30,
-    fontWeight: "800",
-    color: "#222",
-    textAlign: "center",
-    marginBottom: 30,
-  },
-
+  title: { fontSize: 30, textAlign: "center", marginBottom: 20 },
+  message: { color: "green", textAlign: "center", marginBottom: 10 },
   input: {
     height: 50,
     backgroundColor: "#f2f2f2",
     borderRadius: 12,
     paddingHorizontal: 15,
-    fontSize: 16,
     marginBottom: 15,
-    borderWidth: 1,
-    borderColor: "#e1e1e1",
   },
-
   button: {
     height: 50,
     backgroundColor: "#4c6ef5",
     borderRadius: 14,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 10,
-    elevation: 2,
   },
-
-  buttonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "700",
-  },
+  buttonText: { color: "#fff", fontSize: 18, fontWeight: "700" },
 });
