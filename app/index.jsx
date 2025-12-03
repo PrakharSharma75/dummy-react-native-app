@@ -13,11 +13,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Login = () => {
   const router = useRouter();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-
+  
   const handleLogin = async () => {
     if (!email || !password) {
       setMessage("Please enter email and password");

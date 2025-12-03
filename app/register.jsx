@@ -64,7 +64,6 @@ export default function Register() {
 
         {message ? <Text style={styles.message}>{message}</Text> : null}
 
-        {/* 🔹 NEW NAME INPUT */}
         <TextInput
           placeholder="Full Name"
           placeholderTextColor="#999"
